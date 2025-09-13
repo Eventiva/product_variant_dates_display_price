@@ -8,19 +8,15 @@
             <t t-set="calculated_price" t-value="base_price + price_extra"/>
         </xpath>
         <xpath expr="//span[@t-if='price_extra']" position="replace">
-            <span t-if="True" class="badge text-bg-info border"/>
-        </xpath>
-        <xpath expr="//span[@class='sign_badge_price_extra']" position="replace">
-            <!-- Remove the +/- sign since we're showing the total price -->
-        </xpath>
-        <xpath expr="//span[@class='variant_price_extra text-muted fst-italic']" position="replace">
-            <span t-out="calculated_price"
-                class="variant_price_calculated text-muted fst-italic"
-                style="white-space: nowrap;"
-                t-options='{
-                    "widget": "monetary",
-                    "display_currency": (website.pricelist_id or product.env.company).currency_id
-                }'/>
+            <span t-if="True" class="badge text-bg-info border">
+                <span t-out="calculated_price"
+                    class="variant_price_calculated text-muted fst-italic"
+                    style="white-space: nowrap;"
+                    t-options='{
+                        "widget": "monetary",
+                        "display_currency": (website.pricelist_id or product.env.company).currency_id
+                    }'/>
+            </span>
         </xpath>
     </template>
 </odoo>

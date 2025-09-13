@@ -3,8 +3,12 @@
     <!-- Override badge_extra_price template to show calculated variant price instead of price adjustment -->
     <template id="badge_extra_price_calculated" name="Badge Calculated Price" inherit_id="website_sale.badge_extra_price">
         <xpath expr="//t[@t-set='price_extra']" position="replace">
-            <t t-set="base_price" t-value="combination_info.get('price', 0)"/>
-            <t t-set="calculated_price" t-value="base_price"/>
+            <t t-set="price_extra" t-value="ptav._get_extra_price(combination_info)"/>
+            <t t-set="base_price" t-value="product.list_price"/>
+            <t t-set="calculated_price" t-value="base_price + price_extra"/>
+        </xpath>
+        <xpath expr="//span[@t-if='price_extra']" position="replace">
+            <span t-if="price_extra" class="badge text-bg-info border">
         </xpath>
         <xpath expr="//span[@class='sign_badge_price_extra']" position="replace">
             <!-- Remove the +/- sign since we're showing the total price -->

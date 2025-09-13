@@ -7,6 +7,9 @@
             <t t-set="base_price" t-value="product.list_price"/>
             <t t-set="calculated_price" t-value="base_price + price_extra"/>
         </xpath>
+        <xpath expr="//span[@t-if='price_extra']" position="replace">
+            <span t-if="True" class="badge text-bg-info border">
+        </xpath>
         <xpath expr="//span[@class='sign_badge_price_extra']" position="replace">
             <!-- Remove the +/- sign since we're showing the total price -->
         </xpath>

@@ -22,7 +22,7 @@
 
     <!-- Override products_item template to show cheapest active variant price -->
     <template id="products_item_cheapest_price" name="Products Item Cheapest Price" inherit_id="website_sale.products_item">
-        <xpath expr="//div[@class='product_price']//span[hasclass('h6') and hasclass('mb-0')][1]" position="replace">
+        <xpath expr="//div[@class='product_price']//span[@t-if='template_price_vals[\'price_reduce\'] or not website.prevent_zero_price_sale']" position="replace">
             <span t-out="product._get_cheapest_active_variant_price()"
                 t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
         </xpath>

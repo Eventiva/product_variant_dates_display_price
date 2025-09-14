@@ -8,7 +8,7 @@
             <t t-set="calculated_price" t-value="base_price + price_extra"/>
         </xpath>
         <xpath expr="//span[@t-if='price_extra']" position="replace">
-            <span t-if="True" class="badge text-bg-info border">
+            <span t-if="True" class="badge text-bg-primary border">
                 <span t-out="calculated_price"
                     class="variant_price_calculated text-muted fst-italic"
                     style="white-space: nowrap;"

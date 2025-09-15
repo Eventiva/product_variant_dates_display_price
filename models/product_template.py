@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api
 from odoo.tools.float_utils import float_is_zero
+from odoo.tools.float_utils import float_is_zero
 
 
 class ProductTemplate(models.Model):
@@ -21,6 +22,8 @@ class ProductTemplate(models.Model):
         ctx = self.env.context
         cache = {}
         pricelist_id = ctx.get('pricelist') or ctx.get('pricelist_id')
+        pricelist = self.env['product.pricelist'].browse(pricelist_id) if pricelist_id else None
+        price_currency = (pricelist.currency_id if pricelist else None) or self.currency_id or self.company_id.currency_id
 
         def _get_price_for_ptav_ids(ptav_ids):
             key = (self.id, pricelist_id, tuple(sorted(ptav_ids)))
@@ -57,20 +60,14 @@ class ProductTemplate(models.Model):
         for variant in sellable_variants:
             price = _get_price_for_ptav_ids(variant.product_template_attribute_value_ids.ids)
             normalized_price = price if price is not None else float('inf')
-            # Short-circuit as soon as we hit a zero price using currency precision
-            currency = self.currency_id
-            if currency:
-                precision_digits = getattr(currency, 'decimal_places', None)
-                if precision_digits is not None:
-                    if float_is_zero(normalized_price, precision_digits=precision_digits):
-                        return 0
-                else:
-                    if float_is_zero(normalized_price, precision_rounding=currency.rounding):
-                        return 0
-            else:
-                # Fallback to 2 decimals if currency is missing from context
-                if float_is_zero(normalized_price, precision_digits=2):
-                    return 0
+            # Short-circuit as soon as we hit a zero price (use pricelist currency precision)
+            if price is not None and price_currency:
+                if float_is_zero(price, precision_rounding=price_currency.rounding):
+                    return 0.0
+            elif price is not None:
+                # Fallback to 2 decimals if currency cannot be determined
+                if float_is_zero(price, precision_digits=2):
+                    return 0.0
             prices.append(normalized_price)
 
         cheapest_price = min(prices, default=float('inf'))

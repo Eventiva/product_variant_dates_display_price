@@ -24,7 +24,11 @@ class ProductTemplate(models.Model):
         cheapest_price = None
         for variant in active_variants:
             combination_info = self._get_combination_info(variant.product_template_attribute_value_ids.ids)
-            variant_price = combination_info.get('price') or 0.0
+            variant_price = combination_info.get('price', None)
+
+            # Treat missing/nullable prices as positive infinity to avoid selecting them as cheapest
+            if variant_price is None:
+                continue
 
             if cheapest_price is None or variant_price < cheapest_price:
                 cheapest_price = variant_price

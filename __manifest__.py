@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Product Variant Dates Display Price',
-    'version': '18.0.1.0.0',
+    'version': '19.0.1.0.0',
     'category': 'Sales/Sales',
     'summary': 'Display calculated variant price in badges instead of price adjustments',
     'description': """
